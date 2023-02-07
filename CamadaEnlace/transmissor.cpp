@@ -2,9 +2,9 @@
 using namespace std;
 
 void CamadaEnlaceDadosTransmissora (vector<int> quadro) {
-  CamadaEnalceDadosTransmissoraEnquadramento(quadro);
+  CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
   
-  CamadaEnalceDadosTransmissoraControleDeErro(quadro);
+  CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
 }
 
 void CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro) {
@@ -13,17 +13,17 @@ void CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro) {
 
   switch (tipoDeEnquadramento) {
     case 0:
-      quadroEnquadrado = CamadaEnalceDadosTransmissoraContagemDeCaracteres(quadro);
+      quadroEnquadrado = CamadaEnlaceDadosTransmissoraContagemDeCaracteres(quadro);
       break;
     case 1:
-      quadroEnquadrado = CamadaEnalceDadosTransmissoraInsercaoDeBytes(quadro);
+      quadroEnquadrado = CamadaEnlaceDadosTransmissoraInsercaoDeBytes(quadro);
       break;
   }
 
   camadaFisicaTransmissora(quadroEnquadrado);
 }
 
-vector<int> CamadaEnalceDadosTransmissoraContagemDeCaracteres(vector<int> quadro) {
+vector<int> CamadaEnlaceDadosTransmissoraContagemDeCaracteres(vector<int> quadro) {
   vector<int> quadroEnquadrado;
   int numOfBytes = quadro.size() / 8 + 1;
   bitset<8> sizeByte = numOfBytes;
@@ -39,7 +39,7 @@ vector<int> CamadaEnalceDadosTransmissoraContagemDeCaracteres(vector<int> quadro
   return quadroEnquadrado;
 }
 
-vector<int> CamadaEnalceDadosTransmissoraInsercaoDeBytes(vector<int> quadro) {
+vector<int> CamadaEnlaceDadosTransmissoraInsercaoDeBytes(vector<int> quadro) {
   vector<int> quadroEnquadrado;
   int byteDeQuebra[8] = {0, 1, 1, 1, 1, 1, 1, 0};
   int byteDeFlag[8] = {1, 1, 1, 1, 1, 1, 1, 0};
