@@ -1,4 +1,7 @@
 #include <vector>
+#include <bitset>
+#include "funcoesAuxiliares.hpp"
+#include "../CamadaFisica/Transmissor.hpp"
 using namespace std;
 
 void CamadaEnalceDadosTransmissora (vector<int> quadro);
