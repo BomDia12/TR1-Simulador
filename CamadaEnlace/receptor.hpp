@@ -4,12 +4,14 @@
 #include "../CamadaFisica/Transmissor.hpp"
 using namespace std;
 
-void CamadaEnlaceDadosReceptora (vector<int> quadro);
+vector<int> CamadaEnlaceDadosReceptora (vector<int> quadro);
 
-void CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro);
+vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro);
 
-void CamadaEnlaceDadosReceptoraControleDeErro (vector<int> quadro);
+vector<int> CamadaEnlaceDadosReceptoraControleDeErro (vector<int> quadro);
 
 vector<int> CamadaEnlaceDadosReceptoraContagemDeCaracteres (vector<int> quadro);
 
 vector<int> CamadaEnlaceDadosReceptoraInsercaoDeBytes (vector<int> quadro);
+
+vector<int> CamadaEnlaceDadosReceptoraControleDeErro(vector<int> quadro);
