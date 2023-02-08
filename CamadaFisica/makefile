@@ -1,4 +1,4 @@
-all: Simulador.exe
+all: Receptor.o Transmissor.o MeioDeTransicao.o
 
 run: Simulador.exe
 	./Simulador.exe

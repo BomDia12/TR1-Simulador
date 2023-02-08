@@ -19,7 +19,7 @@ void camadaFisicaReceptora(vector<int> fluxoBrutoDeBits) {
   } // fim do switch case
 
   // Chama a próxima camada
-  camadaAplicacaoReceptora(quadro);
+  CamadaEnlace(quadro);
 } // fim do método camada física receptora
 
 // Decodifica o fluxo de símbolos elétricos em bits, tornando 5v em 1 e 0v em 0
@@ -66,40 +66,3 @@ vector<int> camadaFisicaReceptoraDecodificadoraManchester(vector<int> fluxoBruto
 
   return quadro;
 } // fim do mérodo decodificador Manchester
-
-// Transforma a mensagem de bites em uma string de caracteres e chama a aplicação
-void camadaAplicacaoReceptora(vector<int> quadro) {
-  // transforma o vetor de bits em uma string de caracteres usando ASCII
-  string mensagem = bitsToMensagem(quadro);
-
-  // chama a aplicação receptora
-  aplicacaoReceptora(mensagem);
-} // fim da camada aplicação receptora
-
-// A aplicação receptora apenas imprime a mensagem recebida
-void aplicacaoReceptora(string mensagem) {
-  cout << "A mensagem recebida foi: " << mensagem << endl;
-}
-
-// Transforma um vetor de bits em uma string de caracteres
-string bitsToMensagem(vector<int> quadro) {
-  bitset<8> byte; // Um byte que representa um único caracter
-  string mensagem;
-
-  int aux = 0; // contador para o byte
-
-  for (int i = 0; i < quadro.size(); i ++) {
-    // Se um byte for completar esse ciclo
-    if (aux >= 7) {
-      byte[aux] = quadro[i]; // adiciona o último bit ao byte
-      aux = 0; // reinicia o contador
-      // adiciona o caracter correspondete ao byte a string sendo construida
-      mensagem.push_back(static_cast<unsigned char>(byte.to_ulong())); 
-    } else { // caso o byte não for completar
-      byte[aux] = quadro[i]; // adicionar mais um bit ao byte
-      aux++; // aumenta o contador
-    }
-  } // fim do for
-
-  return mensagem;
-} // fim do método bitsToMensagemas

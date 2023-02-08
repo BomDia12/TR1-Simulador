@@ -3,42 +3,6 @@
 #include <iostream>
 using namespace std;
 
-// Função que pega uma string de characteres e transforma eles em um vetor de bits
-vector<int> stringToBits(string mensagem) {
-  vector<int> bits;
-  bitset<8> byte;
-
-  for(int i = 0; i < (int) mensagem.length(); i++) {
-    // Operação que transforma um char em um byte
-    byte = bitset<8>(mensagem[i]);
-
-    // Coloca cada bit do byte dentro do vetor para tratamento individual
-    for (int j = 0; j < 8; j++) {
-      bits.push_back(byte[j]);
-    }
-  } // fim do loop pela string mensagem
-
-  return bits;
-} // fim da função stringToBits
-
-// Aplicação simples que pega uma mensagem do usuário
-void aplicacaoTransmissora() {
-  string mensagem;
-  cout << "Digite uma mensagem" << endl;
-  cin >> mensagem;
-
-  camadaAplicacaoTransmissora(mensagem); // Chamando a próxima camada
-} // fim do método aplicação transmissora
-
-// Camada que passa a mensagem da aplicação transmissora para a camada física
-void camadaAplicacaoTransmissora(string mensagem) {
-  // converte a string de caracteres em um vetor de bits (ints 0 ou 1)
-  vector<int> quadro = stringToBits(mensagem);
-
-  // Chama a próxima camada
-  camadaFisicaTransmissora(quadro);
-}
-
 // Seleciona o método de codificação a ser usado para a transmissão,
 // codifica o quadro e manda o fluxo de bits para o meio de comunicação
 void camadaFisicaTransmissora(vector<int> quadro) {
