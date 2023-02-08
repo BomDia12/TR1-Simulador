@@ -32,6 +32,7 @@ void camadaAplicacaoTransmissora(string mensagem) {
   // converte a string de caracteres em um vetor de bits (ints 0 ou 1)
   vector<int> quadro = stringToBits(mensagem);
 
+
   // Chama a próxima camada
   CamadaEnlaceDadosTransmissora(quadro);
 }

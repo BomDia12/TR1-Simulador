@@ -169,7 +169,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
   //2:x _ x x   =
   //4:_ x x x     =
 
-  for (int i = 0; i < quadro.size() / 7; i += 7) {
+  for (int i = 0; i < quadro.size(); i += 7) {
     // copia os bits de dados
     resultado.push_back(quadro[i]);
     resultado.push_back(quadro[i + 1]);
@@ -187,6 +187,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
     // constroi um indice (posicao) para o erro
     int posicao = ((int) bit1 != paridade1) | ((int) bit2 != paridade2) << 1 | ((int) bit4 != paridade4) << 2;
 
+    continue;
     switch(posicao) {
       case 0:
         // nenhum bit de paridade esta errado, nao fazemos nada
@@ -218,6 +219,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
         break;
     }
 
-    return resultado;
   }
+
+  return resultado;
 }

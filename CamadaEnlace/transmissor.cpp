@@ -1,12 +1,14 @@
 #include "./transmissor.hpp"
+#include "../aplicacao.hpp"
+
 using namespace std;
 
 void CamadaEnlaceDadosTransmissora (vector<int> quadro) {
   vector<int> quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
-  
+
   vector<int> quadroComControleDeErro = CamadaEnlaceDadosTransmissoraControleDeErro(quadroEnquadrado);
 
-  camadaFisicaTransmissora(quadro);
+  camadaFisicaTransmissora(quadroComControleDeErro);
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro) {
@@ -136,7 +138,7 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(vector<in
   //2:x _ x x   =
   //4:_ x x x     =
 
-  for(int i = 0; i < quadro.size() / 4; i += 4) {
+  for(int i = 0; i < quadro.size(); i += 4) {
     // coloca os 4 bits de dados
     resultado.push_back(quadro[i]);
     resultado.push_back(quadro[i + 1]);
