@@ -61,13 +61,15 @@ vector<int> CamadaEnlaceDadosTransmissoraInsercaoDeBytes(vector<int> quadro) {
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro) {
-  int tipoDeControleDeErro = 0;
+  int tipoDeControleDeErro = 2;
   
   switch(tipoDeControleDeErro) {
     case 0:
       return CamadaEnlaceDadosTransmissoraBitDeParidade(quadro);
     case 1:
       return CamadaEnlaceDadosTransmissoraCRC(quadro);
+    case 2:
+      return CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(quadro);
   }
 }
 
@@ -144,7 +146,7 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(vector<in
     // calcula os bits de paridade
     resultado.push_back(quadro[i] ^ quadro[i + 1] ^ quadro[i + 3]);
     resultado.push_back(quadro[i] ^ quadro[i + 2] ^ quadro[i + 3]);
-    resultdao.push_back(quadro[i + 1] ^ quadro[i + 2] ^ quadro[i + 3]);
+    resultado.push_back(quadro[i + 1] ^ quadro[i + 2] ^ quadro[i + 3]);
   }
 
   return resultado;

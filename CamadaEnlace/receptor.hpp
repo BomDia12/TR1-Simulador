@@ -22,4 +22,6 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro);
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> quadro);
 
+vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> quadro);
+
 #endif
