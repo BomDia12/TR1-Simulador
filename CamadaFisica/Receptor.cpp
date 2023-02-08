@@ -3,7 +3,7 @@ using namespace std;
 
 // Seleciona a decodificação a ser usada e chama a próxima camada
 void camadaFisicaReceptora(vector<int> fluxoBrutoDeBits) {
-  int tipoDeDecodificacao = 2; // Variável que determina qual será o método de codificação utilizado
+  int tipoDeDecodificacao = 0; // Variável que determina qual será o método de codificação utilizado
   vector<int> quadro;
 
   switch (tipoDeDecodificacao) {
@@ -19,7 +19,7 @@ void camadaFisicaReceptora(vector<int> fluxoBrutoDeBits) {
   } // fim do switch case
 
   // Chama a próxima camada
-  CamadaEnlace(quadro);
+  CamadaEnlaceDadosReceptora(quadro);
 } // fim do método camada física receptora
 
 // Decodifica o fluxo de símbolos elétricos em bits, tornando 5v em 1 e 0v em 0

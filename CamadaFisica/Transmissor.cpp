@@ -6,7 +6,7 @@ using namespace std;
 // Seleciona o método de codificação a ser usado para a transmissão,
 // codifica o quadro e manda o fluxo de bits para o meio de comunicação
 void camadaFisicaTransmissora(vector<int> quadro) {
-  int tipoDeCodificacao = 2;
+  int tipoDeCodificacao = 0;
   vector<int> fluxoBrutoDeBits; // Os valores desse vetor são as voltagens do sinal
 
   switch (tipoDeCodificacao) {

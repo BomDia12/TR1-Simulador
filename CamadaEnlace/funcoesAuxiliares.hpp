@@ -13,7 +13,6 @@ bool bytesIguais(int byte1[8], int byte2[8]);
 
 void selecionaBitGroup(vector<int> quadro, bitset<4> * grupo, int start);
 
-template <size_t N1, size_t N2 >
-bitset <N1 + N2> concat( const bitset <N1> & b1, const bitset <N2> & b2 );
+bitset <4> concat( const bitset <3> & b1, const bitset <1> & b2 );
 
 #endif

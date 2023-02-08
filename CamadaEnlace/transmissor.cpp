@@ -74,7 +74,7 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro) {
 vector<int> CamadaEnlaceDadosTransmissoraBitDeParidade(vector<int> quadro) {
   int bits1 = 0;
 
-  for (int i; i < quadro.size(); i++) {
+  for (int i = 0; i < quadro.size(); i++) {
     if (quadro[i] == 1) {
       bits1++;
     }
@@ -96,12 +96,12 @@ vector<int> CamadaEnlaceDadosTransmissoraCRC(vector<int> quadro) {
   bitset<3> res;
   bitset<1> next_bit;
 
-  selecionaBitGroup(quadro, &grupoDeBits, 0);
-
   reverse(quadro.begin(), quadro.end());
 
+  selecionaBitGroup(quadro, &grupoDeBits, 0);
+
   for (int i = 0; i + 4 < quadro.size(); i ++) {
-    if (grupoDeBits[3] == 0) {
+    if (grupoDeBits[0] == 0) {
       grupoDeBits = geradorQuandoZero ^ grupoDeBits;
     } else {
       grupoDeBits = gerador ^ grupoDeBits;
@@ -110,7 +110,7 @@ vector<int> CamadaEnlaceDadosTransmissoraCRC(vector<int> quadro) {
       res[j] = grupoDeBits[j];
     }
     next_bit = quadro[i+4];
-    grupoDeBits = concat(next_bit, res);
+    grupoDeBits = concat(res, next_bit);
   }
 
   reverse(quadro.begin(), quadro.end());

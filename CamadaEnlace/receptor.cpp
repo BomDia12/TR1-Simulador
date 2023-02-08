@@ -1,12 +1,12 @@
 #include "./receptor.hpp"
 using namespace std;
 
-vector<int> CamadaEnlaceDadosReceptora(vector<int> quadro) {
-  vector<int> quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-  
-  vector<int> quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErro(quadroDesenquadrado);
+void CamadaEnlaceDadosReceptora(vector<int> quadro) {
+  vector<int> quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErro(quadro);
 
-  // TODO: chamar proxima camada
+  vector<int> quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadroControleDeErro);
+
+  camadaAplicacaoReceptora(quadroDesenquadrado);
 }
 
 vector<int> CamadaEnlaceDadosReceptoraEnquadramento(vector<int> quadro) {
@@ -92,7 +92,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
   vector<int> resultado;
   int contadorDeBits = 0;
 
-  for (int i = 0; i < quadro.size(); i++) {
+  for (int i = 0; i < quadro.size() - 1; i++) {
     if (quadro[i] == 1) {
       contadorDeBits++;
     }
@@ -106,7 +106,6 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
   }
 
   // remove o bit de paridade
-  // TODO: checar se o bit de paridade é o último bit do quadro ou se é o primeiro
   for (int i = 0; i < quadro.size() - 1; i++) {
     resultado.push_back(quadro[i]);
   }
@@ -115,5 +114,43 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
 }
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro) {
-    // TODO: implementar isso ;(
+  bitset<4> gerador (6);
+  bitset<4> geradorQuandoZero (0);
+  bitset<4> grupoDeBits;
+  bitset<3> res;
+  bitset<1> next_bit;
+  bitset<3> resultadoEsperado (0);
+
+  reverse(quadro.begin(), quadro.end());
+
+  selecionaBitGroup(quadro, &grupoDeBits, 0);
+
+
+  for (int i = 0; i + 4 < quadro.size(); i ++) {
+    if (grupoDeBits[3] == 0) {
+      grupoDeBits = geradorQuandoZero ^ grupoDeBits;
+    } else {
+      grupoDeBits = gerador ^ grupoDeBits;
+    }
+    for (int j = 0; j < 3; j++) {
+      res[j] = grupoDeBits[j];
+    }
+    next_bit = quadro[i+4];
+    grupoDeBits = concat(res, next_bit);
+  }
+
+  if (res == resultadoEsperado) {
+    cout << "nenhum erro foi detectado!" << endl;
+  } else {
+    cout << "Tivemos um erro na transmição :(" << endl;
+  }
+
+  reverse(quadro.begin(), quadro.end());
+
+  for (int i = 0; i < 4; i++) {
+    quadro.push_back((int) res[i]);
+  }
+
+  return quadro; 
+
 }
