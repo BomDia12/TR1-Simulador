@@ -20,4 +20,6 @@ vector<int> CamadaEnlaceDadosTransmissoraBitDeParidade (vector<int> quadro);
 
 vector<int> CamadaEnlaceDadosTransmissoraCRC (vector<int> quadro);
 
+vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(vector<int> quadro);
+
 #endif

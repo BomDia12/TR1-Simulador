@@ -121,3 +121,31 @@ vector<int> CamadaEnlaceDadosTransmissoraCRC(vector<int> quadro) {
 
   return quadro;
 }
+
+vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(vector<int> quadro) {
+  vector<int> resultado;
+
+  // |1|2|3|4|5|6|7|
+  //1:x _ x _ x _ x
+  //2:_ x x _ _ x x
+  //4:_ _ _ x x x x
+  // |3|5|6|7|1|2|4|
+  //1:x x _ x =
+  //2:x _ x x   =
+  //4:_ x x x     =
+
+  for(int i = 0; i < quadro.size() / 4; i += 4) {
+    // coloca os 4 bits de dados
+    resultado.push_back(quadro[i]);
+    resultado.push_back(quadro[i + 1]);
+    resultado.push_back(quadro[i + 2]);
+    resultado.push_back(quadro[i + 3]);
+
+    // calcula os bits de paridade
+    resultado.push_back(quadro[i] ^ quadro[i + 1] ^ quadro[i + 3]);
+    resultado.push_back(quadro[i] ^ quadro[i + 2] ^ quadro[i + 3]);
+    resultdao.push_back(quadro[i + 1] ^ quadro[i + 2] ^ quadro[i + 3]);
+  }
+
+  return resultado;
+}
