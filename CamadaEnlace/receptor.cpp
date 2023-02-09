@@ -2,22 +2,25 @@
 using namespace std;
 
 void CamadaEnlaceDadosReceptora(vector<int> quadro) {
+  // confere ou corrige os erros que aparecerem no quadro
   vector<int> quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErro(quadro);
 
+  // desenquadra a informação
   vector<int> quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadroControleDeErro);
 
+  // chama a próxima camada
   camadaAplicacaoReceptora(quadroDesenquadrado);
 }
 
 vector<int> CamadaEnlaceDadosReceptoraEnquadramento(vector<int> quadro) {
-  int tipoDeEnquadramento = 0;
+  int tipoDeEnquadramento = 0; // seleciona o tipo de enquadramento que foi usado
   vector<int> quadroDesenquadrado;
 
   switch (tipoDeEnquadramento) {
-    case 0:
+    case 0: // enquadramento por contagem de caracteres
       quadroDesenquadrado = CamadaEnlaceDadosReceptoraContagemDeCaracteres(quadro);
       break;
-    case 1:
+    case 1: // enquadramento por inserção de bytes
       quadroDesenquadrado = CamadaEnlaceDadosReceptoraInsercaoDeBytes(quadro);
       break;
   }
@@ -49,23 +52,29 @@ vector<int> CamadaEnlaceDadosReceptoraContagemDeCaracteres(vector<int> quadro) {
 
 vector<int> CamadaEnlaceDadosReceptoraInsercaoDeBytes(vector<int> quadro) {
   vector<int> quadroDesenquadrado;
+  // byte que representa o início ou fim de um quadro
   int byteDeQuebra[8] = {0, 1, 1, 1, 1, 1, 1, 0};
+  // byte de flag para sinalisar simbolos especiais na mensagem
   int byteDeFlag[8] = {1, 1, 1, 1, 1, 1, 1, 0};
 
   int byteEstudado[8];
   for (int i = 0; i < quadro.size(); i += 8) {
+    // seleciona o próximo byte do quadro
     selecionarByte(quadro, i, &byteEstudado);
 
+    // caso o byte estudado for o de quebra, retorna o quadroDesenquadrado
+    if (bytesIguais(byteDeQuebra, byteEstudado)) {
+      i += 8;
+      return quadroDesenquadrado;
+    }
+
+    // caso o byte estudado for a flag, pula a flag
     if (bytesIguais(byteDeFlag, byteEstudado)) {
       i += 8;
       selecionarByte(quadro, i, &byteEstudado);
     }
 
-    if (bytesIguais(byteDeQuebra, byteEstudado)) {
-      i += 8;
-      selecionarByte(quadro, i, &byteEstudado);
-    }
-
+    // insere o próximo byte no quadro desenquadrado
     inserirByteEmVetor(&quadroDesenquadrado, byteEstudado);
   }
 
@@ -74,16 +83,16 @@ vector<int> CamadaEnlaceDadosReceptoraInsercaoDeBytes(vector<int> quadro) {
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErro(vector<int> quadro) {
   vector<int> quadroControleDeErro;
-  int tipoDeControleDeErro = 2;
+  int tipoDeControleDeErro = 1; // seleciona o tipo de controle de erro que será usado;
 
   switch(tipoDeControleDeErro) {
-    case 0:
+    case 0: // controle por bit de paridade par
       quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(quadro);
       break;
-    case 1:
+    case 1: // controle por código de redundância cíclica
       quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErroCRC(quadro);
       break;
-    case 2:
+    case 2: // controle e correção dos erros por código de hamming
       quadroControleDeErro = CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(quadro);
   }
 
@@ -101,7 +110,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
   }
   
   // checa se o bit de paridade é par
-  if (contadorDeBits % 2 == 0) {
+  if (contadorDeBits % 2 == quadro[quadro.size() - 1]) {
     cout << "Bit de paridade par, mensagem correta" << endl;
   } else {
     cout << "Bit de paridade impar, mensagem incorreta" << endl;
@@ -116,41 +125,48 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
 }
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro) {
-  bitset<4> gerador (6);
-  bitset<4> geradorQuandoZero (0);
-  bitset<4> grupoDeBits;
-  bitset<3> res;
-  bitset<1> next_bit;
-  bitset<3> resultadoEsperado (0);
+  bitset<4> gerador (6); // Grupo de bits gerador do CRC (0110)
+  bitset<4> geradorQuandoZero (0); // Quando o número mais a esquerda for 0, o gerador vira 0000
+  bitset<4> grupoDeBits; // grupo de bits sendo dividido
+  bitset<3> res; // resultado de cada operação
+  bitset<1> next_bit; // próximo bit a ser dividido
+  bitset<3> resultadoEsperado (0); // se o resultado for 000, o código está correto
 
+  // revertendo o quadro para começar do lado certo dele
   reverse(quadro.begin(), quadro.end());
 
+  // seleciona o primeiro grupo de bits a ser divido
   selecionaBitGroup(quadro, &grupoDeBits, 0);
 
 
-  for (int i = 0; i + 4 < quadro.size(); i ++) {
-    if (grupoDeBits[3] == 0) {
-      grupoDeBits = geradorQuandoZero ^ grupoDeBits;
-    } else {
+  // faz um loop pelo quadro, dividindo os grupos de bits pelo caminho
+  for (int i = 0; i < quadro.size(); i ++) {
+    if (grupoDeBits[3] == 0) { // caso o primeiro valor for 0, usa o gerador 0
+      grupoDeBits = geradorQuandoZero ^ grupoDeBits; // divide os bits usando uma operação bitwise xor
+    } else { // caso o primeiro valor for 1 usa o gerador normal
       grupoDeBits = gerador ^ grupoDeBits;
     }
+    // seleciona os últimos 3 bits como resposta
     for (int j = 0; j < 3; j++) {
       res[j] = grupoDeBits[j];
     }
-    next_bit = quadro[i+4];
-    grupoDeBits = concat(res, next_bit);
+    next_bit = quadro[i+3]; // seleciona o próximo bit a ser divido
+    grupoDeBits = concat(res, next_bit); // atualiza o grupo de bits com o próximo bit
   }
 
   if (res == resultadoEsperado) {
-    cout << "nenhum erro foi detectado!" << endl;
+    cout << "nenhum erro foi detectado!" << endl; // caso o resultado seja 0, não há erro
   } else {
-    cout << "Tivemos um erro na transmição :(" << endl;
+    cout << "Tivemos um erro na transmição :(" << endl; // caso o contrário, algum erro foi detectado
   }
 
+  // reverte o quadro de volta para o formato original 
   reverse(quadro.begin(), quadro.end());
+  vector<int> resultado;
 
-  for (int i = 0; i < 4; i++) {
-    quadro.push_back((int) res[i]);
+  // retira o CRC do quadro
+  for (int i = 0; i < quadro.size() - 3; i++) {
+    resultado.push_back(quadro[i]);
   }
 
   return quadro; 
@@ -160,6 +176,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro) {
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> quadro) {
   vector<int> resultado;
 
+  // esquema de como funciona o código de hamming
   // |1|2|3|4|5|6|7|
   //1:x _ x _ x _ x
   //2:_ x x _ _ x x
@@ -169,6 +186,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
   //2:x _ x x   =
   //4:_ x x x     =
 
+  // faz um loop por cada byte do quadro
   for (int i = 0; i < quadro.size(); i += 7) {
     // copia os bits de dados
     resultado.push_back(quadro[i]);
